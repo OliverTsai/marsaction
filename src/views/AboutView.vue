@@ -26,7 +26,7 @@ export default {
 
     const fetchPosts = async () => {
       try {
-        const response = await axios.get('https://oliver0502api.com/wp-json/wp/v2/posts');
+        const response = await axios.get('https://oliver0502api.com/wp-json/wp/v2/posts?categories=1');
         posts.value = response.data;
         console.log(posts.value);
       } catch (error) {
