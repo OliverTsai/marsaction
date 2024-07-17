@@ -29,8 +29,8 @@ const routes = [
     component: store.isMobile ? mSoccerView : SoccerView,
   },
   {
-    path: '/basketball',
-    name: 'basketball',
+    path: '/seller',
+    name: 'seller',
     component: store.isMobile ? mBasketballView : BasketballView,
   },
 

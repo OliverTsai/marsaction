@@ -99,7 +99,7 @@
             createTXT.textContent = '管理發帖';
             createTXT.classList.add('btn', 'titleBtn01', 'me-2', 'd-md-block');
             createTXT.addEventListener('click', () => {
-                router.push({ name: 'soccer' });
+                router.push({ name: 'seller' });
             });
             document.getElementById('create_txt').appendChild(createTXT);
             } else {
