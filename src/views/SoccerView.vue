@@ -8,7 +8,7 @@
   <div class="row mt-3">
     <div id="members-articles" ref="membersArticles"></div>
   </div>
-  <!-- 新增產品 -->
+  <!-- 新增產品擬態框 -->
   <div class="modal fade" id="txt_set">
     <div class="modal-dialog w-100">
       <div class="modal-content">
@@ -23,28 +23,6 @@
             <label for="title">文章標題</label>
             <input type="text" name="title" id="title" class="form-control">
           </div>
-          <!-- <div class="my-3">
-            <label for="add-category-sex">使用性別：</label>
-            <select id="add-category-sex">
-              <option value="6">男</option>
-              <option value="7">女</option>
-            </select>
-          </div> -->
-          <!-- <div class="my-3">
-            <label for="add-category">選擇類別：</label>
-            <select id="add-category">
-              <option value="8">洋裝</option>
-              <option value="9">運動裝</option>
-              <option value="10">家居服</option>
-              <option value="11">女士沙灘裝</option>
-              <option value="12">上衣</option>
-              <option value="13">褲裙</option>
-              <option value="14">首飾</option>
-              <option value="15">配件</option>
-              <option value="16">包包</option>
-              <option value="17">鞋類</option>
-            </select>
-          </div> -->
           <div class="my-3">
             <label for="file">文章圖片</label>
             <input type="file" name="file" id="file" class="form-control">
@@ -86,6 +64,9 @@
 
 <script>
 import { ref, onMounted } from 'vue';
+// import axios from 'axios';
+import 'cropperjs/dist/cropper.css';
+import Cropper from 'cropperjs';
 
 export default {
   setup() {
@@ -283,9 +264,44 @@ export default {
       return await response.json();
     };
 
+    const initCropper = () => {
+      const input = document.getElementById('file');
+      const imgPreview = document.getElementById('previewImg');
+      const cropButton = document.getElementById('sureCut');
+      const newImg = document.getElementById('newImg');
+
+      let cropper;
+
+      input.addEventListener('change', (e) => {
+        const files = e.target.files;
+        const done = (url) => {
+          input.value = '';
+          document.getElementById('tailoringImg').src = url;
+          cropper = new Cropper(document.getElementById('tailoringImg'), {
+            aspectRatio: 1,
+            viewMode: 1,
+            preview: imgPreview,
+          });
+        };
+        const reader = new FileReader();
+        reader.onload = () => {
+          done(reader.result);
+        };
+        reader.readAsDataURL(files[0]);
+      });
+
+      cropButton.addEventListener('click', () => {
+        const canvas = cropper.getCroppedCanvas({
+          width: 400,
+          height: 400,
+        });
+        newImg.src = canvas.toDataURL();
+      });
+    };
+
     onMounted(() => {
       fetchUserArticles();
-
+      initCropper();
       document.getElementById('save_text').addEventListener('click', uploadFile);
     });
 

@@ -1,10 +1,10 @@
 <template>
   <div>
-    <h1>Posts</h1>
+    <h1>佈告欄</h1>
     <div>
       <div v-for="post in posts" :key="post.id">
         <div>
-          <img :src="post.x_featured_media" alt="Post Image" v-if="post.x_featured_media" />
+          <img :src="post.x_featured_media_medium" alt="Post Image" v-if="post.x_featured_media_medium" />
         </div>
         <div>
           {{ post.title.rendered }}
