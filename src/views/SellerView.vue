@@ -23,19 +23,21 @@ export default {
       }
 
       try {
+        const mediaToken = localStorage.getItem('token');
         const formData = new FormData();
         formData.append('file', this.imageFile);
 
         const response = await fetch('https://oliver0502api.com/wp-json/custom-file-upload/v1/upload', {
           method: 'POST',
           headers: {
-            'Content-Type': 'multipart/form-data',
+            'Authorization': `Bearer ${mediaToken}`,
+
             // 如果需要身份驗證,請在這裡添加相應的授權頭
             // 'Authorization': `Bearer ${localStorage.getItem('token')}`,
           },
           body: formData,
         });
-
+        console.log(response)
         if (response.ok) {
           const data = await response.json();
           console.log('Image uploaded successfully:', data);

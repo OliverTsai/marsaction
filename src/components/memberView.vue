@@ -57,7 +57,7 @@
   
   <script>
   import axios from 'axios';
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted,onBeforeUnmount  } from 'vue';
   import { useRouter } from 'vue-router';
   
   const apiUrl = 'https://oliver0502api.com/';
@@ -69,7 +69,10 @@
         const token = ref(localStorage.getItem('token'));
         const userName = ref(localStorage.getItem('user_Name'));
         const userRoles = ref(localStorage.getItem('user_Roles'));
-  
+
+        let tokenCheckInterval;
+
+        // 檢查憑證
         const fetchUserInfo = async (token) => {
             try {
             const response = await axios.post(`${apiUrl}wp-json/jwt-auth/v1/token/validate`, {}, {
@@ -77,6 +80,7 @@
                 'Authorization': `Bearer ${token}`,
                 },
             });
+            console.log(response)
             if (!response.data.data) {
                 alert('時間太久 重新登入');
                 handleInit();
@@ -86,35 +90,39 @@
             handleInit();
             }
         };
-  
+        
+        // 顯示個人資料
         const displayUserInfo = () => {
             const userEmail = document.createElement('text');
             userEmail.textContent = 'Hi, ' + userName.value;
             document.getElementById('user_name').appendChild(userEmail);
         };
-  
+        
         const setupUserButtons = () => {
-            if (userRoles.value !== 'subscriber') {
+          // 設定管理者的按鈕
+          if (userRoles.value !== 'subscriber') {
             const createTXT = document.createElement('button');
             createTXT.textContent = '管理發帖';
             createTXT.classList.add('btn', 'titleBtn01', 'me-2', 'd-md-block');
             createTXT.addEventListener('click', () => {
-                router.push({ name: 'seller' });
+              // 點後跳轉
+              router.push({ name: 'seller' });
             });
             document.getElementById('create_txt').appendChild(createTXT);
-            } else {
+          } else {
+            // 創建按鈕
             const carButton = document.createElement('button');
             carButton.textContent = '購物車：';
             carButton.classList.add('btn', 'btn-primary');
             carButton.appendChild(document.createElement('span')).classList.add('total-count');
             document.getElementById('shoppingCar').appendChild(carButton);
-            }
-    
-            const outButton = document.createElement('button');
-            outButton.textContent = '登出';
-            outButton.classList.add('btn', 'titleBtn02', 'me-2', 'd-md-block');
-            outButton.addEventListener('click', handleInit);
-            document.getElementById('logout').appendChild(outButton);
+          }
+  
+          const outButton = document.createElement('button');
+          outButton.textContent = '登出';
+          outButton.classList.add('btn', 'titleBtn02', 'me-2', 'd-md-block');
+          outButton.addEventListener('click', handleInit);
+          document.getElementById('logout').appendChild(outButton);
         };
   
         const setupLoginRegisterButtons = () => {
@@ -139,6 +147,7 @@
             localStorage.removeItem('user_Name');
             localStorage.removeItem('user_Mail');
             localStorage.removeItem('user_Roles');
+            window.location.reload();
             router.push({ name: 'home' });
         };
   
@@ -214,13 +223,22 @@
         };
   
         onMounted(() => {
-            if (token.value) {
+          if (token.value) {
+          fetchUserInfo(token.value);
+          displayUserInfo();
+          setupUserButtons();
+          tokenCheckInterval = setInterval(() => {
             fetchUserInfo(token.value);
-            displayUserInfo();
-            setupUserButtons();
-            } else {
-            setupLoginRegisterButtons();
-            }
+          }, 300000); // 每5分钟检查一次凭证
+          } else {
+          setupLoginRegisterButtons();
+          }
+        });
+
+        onBeforeUnmount(() => {
+          if (tokenCheckInterval) {
+            clearInterval(tokenCheckInterval);
+          }
         });
   
         return {

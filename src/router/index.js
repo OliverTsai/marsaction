@@ -8,7 +8,7 @@ import AboutView from '@/views/AboutView.vue';
 import mAboutView from '@/views/m/mAboutView.vue';
 import SoccerView from '@/views/SoccerView.vue';
 import mSoccerView from '@/views/m/mSoccerView.vue';
-import BasketballView from '@/views/BasketballView.vue';
+import SellerView from '@/views/SellerView.vue';
 import mBasketballView from '@/views/m/mBasketballView.vue';
 
 const routes = [
@@ -31,7 +31,7 @@ const routes = [
   {
     path: '/seller',
     name: 'seller',
-    component: store.isMobile ? mBasketballView : BasketballView,
+    component: store.isMobile ? mBasketballView : SellerView,
   },
 
 ]
