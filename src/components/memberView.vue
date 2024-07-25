@@ -1,13 +1,27 @@
 <template>
     <div class="headerBd p-3">
-      <div v-if="token" class="headerBox1">
-        <div id="create_txt"></div>
-        <div id="user_name"></div>
-        <div id="logout"></div>
+      <div v-if="token" class="headerBox">
+        <div class="leftBox">
+          <router-link to="/">
+            <button class="btn">首頁</button>
+          </router-link>
+        </div>
+        <div class="rightBox">
+          <div id="user_name"></div>
+          <div id="create_txt"></div>
+          <div id="logout"></div>
+        </div>
       </div>
-      <div v-else class="headerBox1">
-        <div id="register"></div>
-        <div id="login"></div>
+      <div v-else class="headerBox">
+        <div class="leftBox">
+          <router-link to="/">
+            <button class="btn">首頁</button>
+          </router-link>
+        </div>
+        <div class="rightBox">
+          <div id="register"></div>
+          <div id="login"></div>
+        </div>
       </div>
   
       <!-- Login Modal -->
@@ -71,6 +85,39 @@
         const userRoles = ref(localStorage.getItem('user_Roles'));
 
         let tokenCheckInterval;
+
+        // 創建一個 axios 實例
+        const apiClient = axios.create({
+          baseURL: `${apiUrl}wp-json/jwt-auth/v1`,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        // 設置請求攔截器
+        apiClient.interceptors.request.use(async (config) => {
+          const token = localStorage.getItem('token');
+          if (token) {
+            try {
+              const response = await axios.post(`${apiUrl}wp-json/jwt-auth/v1/token/validate`, {}, {
+                headers: {
+                  'Authorization': `Bearer ${token}`,
+                },
+              });
+              if (!response.data.data) {
+                alert('時間太久 重新登入');
+                handleInit();
+              }
+            } catch (error) {
+              console.error('Error:', error);
+              handleInit();
+            }
+            config.headers['Authorization'] = `Bearer ${token}`;
+          }
+          return config;
+        }, (error) => {
+          return Promise.reject(error);
+        });
 
         // 檢查憑證
         const fetchUserInfo = async (token) => {
@@ -245,6 +292,7 @@
             token,
             login,
             register,
+            apiClient,
         };
     },
   };
@@ -257,5 +305,15 @@
         display: flex;
         justify-content: space-between;
     }
+  }
+
+  .headerBox{
+    display: flex;
+    justify-content:space-around;
+  }
+  .rightBox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   </style>

@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1>佈告欄</h1>
     <div>
       <div v-for="post in posts" :key="post.id">
         <div>
@@ -9,6 +8,7 @@
         <div>
           {{ post.title.rendered }}
         </div>
+        <div>發帖人：{{ post.x_author }}</div>
       </div>
     </div>
   </div>
@@ -25,8 +25,11 @@ export default {
     const posts = ref([]);
 
     const fetchPosts = async () => {
+      
+      const timestamp = new Date().getTime();
+
       try {
-        const response = await axios.get('https://oliver0502api.com/wp-json/wp/v2/posts?categories=1');
+        const response = await axios.get(`https://oliver0502api.com/wp-json/wp/v2/posts?categories=1&timestamp=${timestamp}`);
         posts.value = response.data;
         console.log(posts.value);
       } catch (error) {

@@ -1,157 +1,306 @@
 <template>
-  <div>
+  <!-- <div>
     <label for="file">產品圖片</label>
     <input type="file" name="file" @change="handleImageUpload" class="form-control">
     <button @click="uploadImage" class="btn btn-primary mt-2">上傳圖片</button>
-  </div>
+  </div> -->
   <div class="container">
     <div class="myRowCenter mt-3">
-        <h3>個人產品列表</h3>
-        <button id="openTxtSet" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#txt_set">
-            新增產品
-        </button>
+      <h3>個人文章列表</h3>
+      <button id="openTxtSet" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#txt_set">
+        新增文章
+      </button>
     </div>
     <div class="row mt-3">
-        <div id="members-articles"></div>
+      <div id="members-articles">
+        <ul>
+          <li v-for="article in articles" :key="article.id" class="d-flex justify-content-between align-items-center">
+            <div></div>
+            <span>{{ article.title.rendered }}</span>
+            <button @click="deleteArticle(article.id)" class="btn btn-danger">刪除</button>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
   <!-- 新增產品 -->
   <div class="modal fade" id="txt_set">
     <div class="modal-dialog w-100">
-        <div class="modal-content">
+      <div class="modal-content">
 
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h4 class="modal-title">新增產品</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-
-            <!-- Modal body -->
-            <div class="modal-body">
-                <!-- <form action=""> -->
-                <div class="my-3">
-                    <label for="title">產品標題</label>
-                    <input type="text" name="title" id="title" class="form-control">
-                </div>
-                <div class="my-3">
-                    <label for="add-category-sex">使用性別：</label>
-                    <select id="add-category-sex">
-                        <option value="6">男</option>
-                        <option value="7">女</option>
-                    </select>
-                </div>
-                <div class="my-3">
-                    <label for="add-category">選擇類別：</label>
-                    <select id="add-category">
-                        <option value="8">洋裝</option>
-                        <option value="9">運動裝</option>
-                        <option value="10">家居服</option>
-                        <option value="11">女士沙灘裝</option>
-                        <option value="12">上衣</option>
-                        <option value="13">褲裙</option>
-                        <option value="14">首飾</option>
-                        <option value="15">配件</option>
-                        <option value="16">包包</option>
-                        <option value="17">鞋類</option>
-                    </select>
-                </div>
-                <div class="my-3">
-                    <label for="file">產品圖片</label>
-                    <input type="file" name="file" id="file" class="form-control">
-                    <hr>
-                    <div class="crop">
-                        <div class="box tailoring-box h-100">
-                            <img id="tailoringImg" src="">
-                        </div>
-                        圖片預覽：
-                        <div class="box preview">
-                            <div id="previewImg"></div>
-                        </div>
-
-                        <button id="sureCut">裁剪</button>
-                    </div>
-                    <div class="result">
-                        裁切壓縮後：
-                        <p></p>
-                        <span></span>
-                        <input type="hidden">
-                        <img id="newImg" class="w-100" src="">
-                    </div>
-                </div>
-                <div class="my-3">
-                    <label for="text">介紹內文</label>
-                    <textarea name="text" id="text" class="form-control"></textarea>
-                </div>
-                <div class="my-3">
-                    <label for="money">金額</label>
-                    <input type="number" name="title" id="money" class="form-control">
-                </div>
-                <div class="my-3">
-                    <button class="btn btn-primary" type="submit" id="save_text">上傳</button>
-                </div>
-                <!-- </form> -->
-            </div>
+        <!-- Modal Header -->
+        <div class="modal-header modTitle w-100">
+          <h4 class="modal-title">新增文章</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
+
+        <!-- Modal body -->
+        <div class="modal-body w-100">
+          <!-- <form action=""> -->
+          <div class="my-3">
+            <label for="title">文章標題</label>
+            <input type="text" name="title" id="title" class="form-control">
+          </div>
+          <div class="my-3">
+            <label for="file">文章圖片</label>
+            <input type="file" name="file" @change="handleImageUpload" id="file" class="form-control">
+            <hr>
+            <div class="crop">
+              <div class="box tailoring-box h-100">
+                <img id="tailoringImg" :src="tailoringImgSrc">
+              </div>
+              圖片預覽：
+              <div class="box preview">
+                <div id="previewImg" class="w-100"></div>
+              </div>
+
+              <button id="sureCut" @click="sureCut">裁剪</button>
+            </div>
+            <div class="result" v-show="resultImgSrc">
+              裁切壓縮後：
+              <p></p>
+              <span></span>
+              <input type="hidden">
+              <img id="newImg" class="w-100" :src="resultImgSrc">
+            </div>
+          </div>
+          <div class="my-3">
+            <label for="text">介紹內文</label>
+            <textarea name="text" id="text" class="form-control"></textarea>
+          </div>
+          <!-- <div class="my-3">
+            <label for="money">金額</label>
+            <input type="number" name="title" id="money" class="form-control">
+          </div> -->
+          <div class="my-3">
+            <button class="btn btn-primary" type="submit" id="save_text" @click="uploadFile">上傳</button>
+          </div>
+          <!-- </form> -->
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import Cropper from 'cropperjs';
+import axios from 'axios';
 
 export default {
   setup() {
+    const articles = ref([]);
     const imageFile = ref(null);
+    const tailoringImgSrc = ref('');
+    const resultImgSrc = ref('');
+    const cropper = ref(null);
+
+    // 圖片裁切
+    onMounted(() => {
+      fetchArticles();
+
+      const image = document.getElementById('tailoringImg');
+      cropper.value = new Cropper(image, {
+        aspectRatio: 800 / 600,
+        preview: '#previewImg',
+        guides: false,
+        autoCropArea: 0.5,
+        dragMode: 'crop',
+        cropBoxResizable: true,
+        movable: true,
+        zoomable: true,
+        rotatable: false,
+        zoomOnWheel: true,
+        zoomOnTouch: true,
+      });
+    });
+
+    // 顯示發文
+    const fetchArticles = async () => {
+      try {
+        const userID = localStorage.getItem('user_ID');
+        const response = await fetch(`https://oliver0502api.com/wp-json/wp/v2/posts?author=${userID}&categories=1`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+
+        const data = await response.json();
+        articles.value = data;
+        console.log(articles)
+      } catch (error) {
+        console.error('Failed to fetch articles:', error);
+      }
+    };
 
     // 圖片檔案
     const handleImageUpload = (event) => {
-      imageFile.value = event.target.files[0];
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          tailoringImgSrc.value = evt.target.result;
+          cropper.value.replace(evt.target.result, false);
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+
+    const sureCut = () => {
+      if (!tailoringImgSrc.value) {
+        return false;
+      } else {
+        const canvas = cropper.value.getCroppedCanvas();
+        resultImgSrc.value = canvas.toDataURL('image/jpeg');
+      }
+    };
+
+    const urltoFile = async (url, filename, mimeType) => {
+      const res = await fetch(url);
+      const buf = await res.arrayBuffer();
+      return new File([buf], filename, { type: mimeType });
     };
 
     // 上傳圖片
-    const uploadImage = async () => {
-      if (!imageFile.value) {
-        alert('請選擇圖片');
-        return;
-      }
-      try {
-        const mediaToken = localStorage.getItem('token');
-        const formData = new FormData();
-        formData.append('file', imageFile.value);
+    // const uploadImage = async () => {
+    //   if (!imageFile.value) {
+    //     alert('請選擇圖片');
+    //     return;
+    //   }
+    //   try {
+    //     const mediaToken = localStorage.getItem('token');
+    //     const formData = new FormData();
+    //     formData.append('file', imageFile.value);
 
-        const response = await fetch('https://oliver0502api.com/wp-json/custom-file-upload/v1/upload', {
-          method: 'POST',
+    //     const response = await fetch('https://oliver0502api.com/wp-json/custom-file-upload/v1/upload', {
+    //       method: 'POST',
+    //       headers: {
+    //         'Authorization': `Bearer ${mediaToken}`,
+    //       },
+    //       body: formData,
+    //     });
+
+    //     if (response.ok) {
+    //       const data = await response.json();
+    //       console.log('Image uploaded successfully:', data);
+    //       alert('圖片上傳成功');
+    //       return data;
+    //     } else {
+    //       console.error('Error uploading image:', response.status);
+    //       alert('圖片上傳失敗,請稍後再試');
+    //     }
+    //   } catch (error) {
+    //     console.error('Error uploading image:', error);
+    //     alert('圖片上傳失敗,請稍後再試');
+    //   }
+    // };
+    const uploadImage = async (file) => {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        const response = await axios.post('https://oliver0502api.com/wp-json/custom-file-upload/v1/upload', {
           headers: {
-            'Authorization': `Bearer ${mediaToken}`,
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
           },
           body: formData,
         });
 
-        if (response.ok) {
-          const data = await response.json();
-          console.log('Image uploaded successfully:', data);
-          alert('圖片上傳成功');
-          return data;
-        } else {
-          console.error('Error uploading image:', response.status);
-          alert('圖片上傳失敗,請稍後再試');
-        }
+        return await response.json();
       } catch (error) {
-        console.error('Error uploading image:', error);
-        alert('圖片上傳失敗,請稍後再試');
+        alert('沒有裁切後的圖片!');
+        console.log('圖片新增失敗');
+        console.error(error);
       }
     };
 
     // 新增產品
-    // const uploadFile = async () =>{
+    const uploadFile = async () => {
+      const title = document.getElementById('title').value;
+      const text = document.getElementById('text').value;
+      const category = "1";
+      // const money = document.getElementById('money').value;
+      const fileName = document.getElementById('file').files[0];
 
-    // };
+      // 取得裁切後的圖片
+      const newImgSrc = resultImgSrc.value;
+      const file = await urltoFile(newImgSrc, fileName.name, 'image/jpeg');
+
+      const imageData = await uploadImage(file);
+      localStorage.setItem('imageID', imageData.data.id);
+
+      if (imageData.success) {
+        const postData = new FormData();
+        postData.append('title', title);
+        postData.append('content', text);
+        postData.append('user_id', localStorage.getItem('user_ID'));
+        postData.append('featured_image', localStorage.getItem('imageID'));
+        postData.append('money', "錢錢錢");
+        const categories = [category];
+        postData.append('categories', JSON.stringify(categories));
+
+        try {
+          const response = await axios.post('https://oliver0502api.com/wp-json/wp/v2/rae/post/create', {
+            body: postData,
+          });
+
+          const data = await response.json();
+
+          if (data.status == 200) {
+            alert('新增成功！');
+            window.location.reload();
+          } else {
+            console.log('文章判定失敗');
+          }
+        } catch (error) {
+          console.error('Upload error:', error);
+        }
+      } else {
+        console.log('沒有圖片成功提示');
+        console.log(imageData);
+      }
+    };
+
+    // 刪除文章
+    const deleteArticle = async (articleId) => {
+      try {
+        const response = await axios.delete(`https://oliver0502api.com/wp-json/wp/v2/posts/${articleId}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+
+        if (response.ok) {
+          articles.value = articles.value.filter(article => article.id !== articleId);
+          alert('刪除成功');
+        } else {
+          console.error('刪除失敗');
+        }
+      } catch (error) {
+        console.error('刪除失敗', error);
+      }
+    };
 
     return {
+      articles,
       imageFile,
+      tailoringImgSrc,
+      resultImgSrc,
       handleImageUpload,
+      sureCut,
+      uploadFile,
       uploadImage,
+      deleteArticle,
     };
   },
 };
 </script>
+
+<style lang="scss">
+
+.modTitle{
+  display: flex;
+  justify-content: space-between;
+}
+</style>
