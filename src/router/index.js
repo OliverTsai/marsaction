@@ -9,7 +9,7 @@ import mAboutView from '@/views/m/mAboutView.vue';
 import SoccerView from '@/views/SoccerView.vue';
 import mSoccerView from '@/views/m/mSoccerView.vue';
 import SellerView from '@/views/SellerView.vue';
-import mBasketballView from '@/views/m/mBasketballView.vue';
+import mSellerView from '@/views/m/mSellerView.vue';
 
 const routes = [
   // 電腦網頁
@@ -31,7 +31,7 @@ const routes = [
   {
     path: '/seller',
     name: 'seller',
-    component: store.isMobile ? mBasketballView : SellerView,
+    component: store.isMobile ? mSellerView : SellerView,
   },
 
 ]

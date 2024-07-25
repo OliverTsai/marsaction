@@ -127,7 +127,6 @@
                 'Authorization': `Bearer ${token}`,
                 },
             });
-            console.log(response)
             if (!response.data.data) {
                 alert('時間太久 重新登入');
                 handleInit();
