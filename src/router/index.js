@@ -19,7 +19,7 @@ const routes = [
     component: store.isMobile ? mHomeView : HomeView,
   },
   {
-    path: '/about',
+    path: '/about/:id',
     name: 'about',
     component: store.isMobile ? mAboutView : AboutView,
   },

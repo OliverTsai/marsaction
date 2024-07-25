@@ -2,13 +2,15 @@
   <div>
     <div>
       <div v-for="post in posts" :key="post.id">
-        <div>
-          <img :src="post.x_featured_media_medium" alt="Post Image" v-if="post.x_featured_media_medium" />
-        </div>
-        <div>
-          {{ post.title.rendered }}
-        </div>
-        <div>發帖人：{{ post.x_author }}</div>
+        <router-link :to="{ name: 'about', params: { id: post.id } }">
+          <div>
+            <img :src="post.x_featured_media_medium" alt="Post Image" v-if="post.x_featured_media_medium" />
+          </div>
+          <div>
+            {{ post.title.rendered }}
+          </div>
+          <div>發帖人：{{ post.x_author }}</div>
+        </router-link>
       </div>
     </div>
   </div>
