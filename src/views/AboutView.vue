@@ -1,14 +1,14 @@
 <template>
-  <div>
+  <div class="container p-3">
     <div v-if="post">
       <div>
-        <img :src="post.x_featured_media_medium" alt="Post Image" v-if="post.x_featured_media_medium" />
+        <img :src="post.x_featured_media_original" alt="Post Image" v-if="post.x_featured_media_medium" class="w-100" />
       </div>
-      <div>
+      <div class="mt-2">
         {{ post.title.rendered }}
       </div>
-      <div v-html="post.content.rendered"></div>
-      <div>發帖人：{{ post.x_author }}</div>
+      <div v-html="post.content.rendered" class="mt-2"></div>
+      <div class="mt-2">發帖人：{{ post.x_author }}</div>
     </div>
     <div v-else>
       <p>Loading...</p>
