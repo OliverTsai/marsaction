@@ -73,8 +73,6 @@ export default {
         // const data = await response.json();
 
         comments.value = response.data;
-        console.log(postId)
-        console.log(response)
       } catch (error) {
         console.error('Error fetching comments:', error);
         if (error instanceof TypeError) {
@@ -86,12 +84,18 @@ export default {
     const submitComment = async () => {
       const userMail = localStorage.getItem('user_Mail')
       const userName = localStorage.getItem('user_Name')
+      let userPlayName = localStorage.getItem('user_PlayName')
+
+      if (!userPlayName){
+        userPlayName = userName
+      }
+      console.log(userPlayName)
       try {
         const commentData = {
           post: postId,
           content: newComment.value,
           author_email: userMail,  // 替換為實際用戶的email
-          author_name: userName,  // 替換為實際用戶的名稱
+          author_name: userPlayName,  // 替換為實際用戶的名稱
         };
         const response = await fetch('https://oliver0502api.com/wp-json/wp/v2/comments', {
           method: 'POST',

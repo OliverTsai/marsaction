@@ -191,6 +191,7 @@
             localStorage.removeItem('token');
             localStorage.removeItem('user_ID');
             localStorage.removeItem('user_Name');
+            localStorage.removeItem('user_PlayName');
             localStorage.removeItem('user_Mail');
             localStorage.removeItem('user_Roles');
             window.location.reload();
@@ -220,10 +221,11 @@
                     'Content-Type': 'application/json',
                 },
                 });
-    
+
                 localStorage.setItem('user_ID', userResponse.data.user.ID);
                 localStorage.setItem('user_Name', userResponse.data.user.data.user_nicename);
                 localStorage.setItem('user_Mail', userResponse.data.user.data.user_email);
+                localStorage.setItem('user_PlayName', userResponse.data.user.data.display_name);
                 localStorage.setItem('user_Roles', userResponse.data.user.roles);
                 alert('登入成功!');
                 window.location.reload();
